@@ -1,0 +1,33 @@
+<div class="modal-overlay" *ngIf="modalAberto" (click)="fecharModal()">
+  <form class="estoque-modal" (click)="$event.stopPropagation()" (ngSubmit)="salvar()">
+    <div class="modal-header">
+      <h2>{{ modoEdicao ? 'Editar lote' : 'Novo lote' }}</h2>
+      <button type="button" class="btn-fechar" aria-label="Fechar" (click)="fecharModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="campo">
+        <label for="batchCode">Código do lote</label>
+        <input id="batchCode" name="batchCode" [(ngModel)]="lote.batchCode" maxlength="20" required placeholder="Ex.: LT-2026-001">
+      </div>
+      <div class="campo">
+        <label for="productId">Produto</label>
+        <select id="productId" name="productId" [(ngModel)]="lote.productId" required>
+          <option [ngValue]="0" disabled>Selecione um produto</option>
+          <option *ngFor="let produto of produtos" [ngValue]="produto.id">{{ produto.name }} — {{ produto.category }}</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="quantity">Quantidade</label>
+        <input id="quantity" name="quantity" type="number" [(ngModel)]="lote.quantity" min="1" step="1" required>
+      </div>
+      <div class="campo">
+        <label for="expirationAt">Validade</label>
+        <input id="expirationAt" name="expirationAt" type="date" [(ngModel)]="lote.expirationAt" [min]="'2026-11-27'" required>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-cancelar" (click)="fecharModal()">Cancelar</button>
+      <button type="submit" class="btn-salvar">Salvar lote</button>
+    </div>
+  </form>
+</div>

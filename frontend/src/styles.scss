@@ -1,0 +1,264 @@
+/* You can add global styles to this file, and also import other style files */
+@import '@fortawesome/fontawesome-free/css/all.css';
+@import 'mdb-angular-ui-kit/assets/scss/mdb.scss';
+
+
+/* 1. Importando a fonte Poppins do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* 2. Definindo as variáveis globais no :root */
+:root {
+  /* Cores Principais */
+  --primary-color: #FBC3BC;
+  --secondary-color: #996A71; 
+  --background-color: #FEFEFE;
+  --text-color: #0F0F0F;
+  --border-color: #FFE3E0;
+  
+  /* Gradiente (Combinei sua cor com a primária para criar um efeito legal) */
+  --gradient-color: linear-gradient(135deg, var(--primary-color) 0%, rgb(247, 171, 173) 80%);
+
+  /* Tipografia */
+  --font-family-primary: 'Poppins', sans-serif;
+
+  /* Sistema de Tamanhos baseados em 4px (Para margens, paddings, etc) */
+  --size-1: 4px;
+  --size-2: 8px;
+  --size-3: 12px;
+  --size-4: 16px;
+  --size-5: 20px;
+  --size-6: 24px;
+  --size-7: 28px;
+  --size-8: 32px;
+
+  /* Border Radius (Aproveitando a escala de 4px) */
+  --radius-sm: var(--size-1);  /* 4px - cantos levemente arredondados */
+  --radius-md: var(--size-2);  /* 8px - padrão para botões e inputs */
+  --radius-lg: var(--size-3);  /* 12px - padrão para cards */
+  --radius-xl: var(--size-4);  /* 16px - elementos maiores */
+  --radius-full: 9999px;       /* Para botões totalmente redondos tipo pílula */
+}
+
+/* 3. Aplicando os padrões básicos no body */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--font-family-primary);
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+// Estilização global para tabelas no sistema
+.tabela-container {
+
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 5px 5px 12px rgba(247, 171, 173, 0.5);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    thead {
+      height: 40px;
+      background: white;
+
+      th {
+        padding: 10px;
+        font-size: var(--size-4);
+        font-weight: 500;
+        text-align: left;
+        color: var(--text-color);
+        border-bottom: 1px solid var(--border-color);
+      }
+    }
+
+    td {
+      height: 40px;
+      padding: 6px 10px;
+      font-size: var(--size-4);
+      color: #555;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    // Avatar e informações
+    .avatar-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .avatar {
+        width: 26px;
+        height: 26px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+
+        border-radius: 50%;
+
+        background: #ffcaca;
+
+        color: #555;
+
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .nome-container {
+        display: flex;
+        flex-direction: column;
+
+        .nome {
+          font-size: 16px;
+          font-weight: 600;
+
+          color: #444;
+        }
+
+        .id {
+          margin-top: 1px;
+          font-size: 12px;
+
+          color: #bcbcbc;
+        }
+      }
+
+    }
+
+    // Status de ativo de desativo
+    .status {
+      padding: 4px 8px;
+
+      border-radius: 10px;
+
+      font-size: 12px;
+      font-weight: 500;
+
+      &.ativo {
+        background: #dfffca;
+        color: #4fa52c;
+      }
+
+      &.inativo {
+        background: #ffd0d0;
+        color: #e64b4b;
+      }
+
+    }
+
+    // Butões de ação dentro da tabela
+    .acoes {
+      display: flex;
+      align-items: center;
+      gap: var(--size-3);
+
+      button {
+        width: 24px;
+        height: 24px;
+
+        padding: 0;
+
+        border: none;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: var(--radius-xl);
+
+        cursor: pointer;
+
+        font-size: var(--size-3);
+
+        transition: 0.2s;
+      }
+
+      .btn-status {
+        position: relative;
+        width: 48px;
+        height: 24px;
+        background-color: var(--border-color); // Cor padrão quando inativo/neutro
+        border: none;
+        border-radius: var(--radius-full);
+        cursor: pointer;
+        padding: 0;
+        transition: background-color 0.3s ease;
+        outline: none;
+        display: flex;
+        align-items: center;
+
+        // Bolinha interna (usando o ícone do FontAwesome)
+        .fas.fa-circle {
+          position: absolute;
+          left: 3px;
+          font-size: 14px; // Tamanho da bolinha interna
+          color: #FFFFFF;
+          transition: transform 0.3s ease, color 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        // Estado ATIVO
+        &.active {
+          background-color: var(--secondary-color); // Usa sua cor secundária (ou troque para --primary-color se preferir)
+
+          .fas.fa-circle {
+            transform: translateX(24px); // Desloca a bolinha para a direita
+          }
+        }
+
+        // Estado INATIVO (opcional, caso queira estilizar especificamente)
+        &.inativo {
+          background-color: #d1d5db; // Um cinza suave para indicar desligado
+
+          .fas.fa-circle {
+            transform: translateX(0);
+          }
+        }
+
+        &:hover {
+          opacity: 0.9;
+        }
+
+      }
+
+
+      .btn-editar {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: var(--size-1) var(--size-2);
+        cursor: pointer;
+        color: var(--text-color);
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: var(--border-color);
+        }
+      }
+    }
+  }
+
+}
+
+
+.border_of_box{
+    border: 1px solid var(--border-color);
+   
+}

@@ -1,0 +1,29 @@
+:host { display: block; min-width: 0; }
+.estoque-container { width: 100%; min-height: 100%; padding: 38px clamp(20px, 5vw, 58px); box-sizing: border-box; background: #fff; color: #292525; }
+.cabecalho { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 28px; }
+.eyebrow { margin: 0 0 7px; color: #ba8588; font-size: 10px; font-weight: 700; letter-spacing: .13em; }
+h1 { margin: 0; font-size: 27px; font-weight: 700; }
+.subtitulo { margin: 7px 0 0; color: #888080; font-size: 13px; }
+.btn-novo { height: 42px; padding: 0 18px; display: flex; align-items: center; gap: 9px; border: 1px solid #edc3c3; border-radius: 10px; background: #fff8f7; color: #473638; font-size: 13px; font-weight: 650; cursor: pointer; box-shadow: 0 3px 10px #c9909018; transition: .2s; }
+.btn-novo:hover { background: #ffefed; transform: translateY(-1px); }
+.btn-novo span { color: #c77e82; font-size: 22px; font-weight: 400; }
+.barra-ferramentas { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.campo-busca { width: min(430px, 100%); height: 42px; display: flex; align-items: center; gap: 11px; padding: 0 15px; border: 1px solid #f0d8d7; border-radius: 10px; box-shadow: 0 2px 8px #c9909010; color: #b78285; box-sizing: border-box; }
+.campo-busca:focus-within { border-color: #d6a1a3; box-shadow: 0 0 0 3px #e9bfc022; }
+.campo-busca input { width: 100%; border: 0; outline: 0; color: #393333; background: transparent; font: inherit; font-size: 13px; }
+.campo-busca input::placeholder { color: #b6acad; }
+.contador { color: #928889; font-size: 12px; }
+.tabela-container { width: 100%; overflow-x: auto; border: 1px solid #f0d5d5; border-radius: 12px; box-shadow: 0 4px 14px #a85b5b0d; }
+table { width: 100%; min-width: 680px; border-collapse: collapse; text-align: left; }
+thead { background: #fffafa; }
+th { height: 44px; padding: 0 16px; border-bottom: 1px solid #f1dcdc; color: #817779; font-size: 11px; font-weight: 650; }
+td { height: 58px; padding: 5px 16px; border-bottom: 1px solid #f5e8e7; color: #655d5e; font-size: 12px; }
+tbody tr:last-child td { border-bottom: 0; }
+.codigo, .id { display: block; }.codigo { color: #413839; font-size: 12px; font-weight: 650; }.id { margin-top: 4px; color: #aaa0a1; font-size: 10px; }
+.produto { color: #53494a; font-weight: 550; }.quantidade { color: #403839; font-weight: 700; }
+.status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 20px; font-size: 10px; font-weight: 650; white-space: nowrap; }.status i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.status.disponivel { color: #518447; background: #edf7e9; }.status.vencido { color: #bb535b; background: #fff0ef; }.status.esgotado { color: #987c45; background: #fbf4e4; }
+.col-acoes { width: 88px; }.acoes { display: flex; gap: 7px; }.btn-acao { width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 7px; cursor: pointer; transition: .15s; }.btn-acao.editar { color: #397ab0; background: #eaf3fb; }.btn-acao.editar:hover { background: #d9eafa; }.btn-acao.excluir { color: #d64f5b; background: #fff0ef; }.btn-acao.excluir:hover { background: #ffe1df; }
+.estado-vazio { height: 100px; text-align: center; color: #958a8b; }
+.mensagem { margin: 0 0 14px; padding: 11px 14px; border-radius: 8px; font-size: 12px; }.erro { color: #a13b43; background: #fff0ef; }
+@media (max-width: 600px) { .estoque-container { padding: 26px 16px; }.cabecalho { align-items: flex-start; }.subtitulo { max-width: 230px; line-height: 1.5; }.btn-novo { padding: 0 12px; white-space: nowrap; }.campo-busca { width: 100%; }.contador { display: none; } }

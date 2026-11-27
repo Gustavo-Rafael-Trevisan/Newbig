@@ -1,0 +1,44 @@
+<main class="estoque-container">
+  <div class="cabecalho">
+    <div>
+      <p class="eyebrow">CONTROLE DE INVENTÁRIO</p>
+      <h1>Estoque</h1>
+      <p class="subtitulo">Consulte e gerencie os lotes dos seus produtos.</p>
+    </div>
+    <button class="btn-novo" type="button" (click)="novoLote()"><span>+</span> Novo lote</button>
+  </div>
+
+  <div class="barra-ferramentas">
+    <label class="campo-busca">
+      <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+      <input type="search" placeholder="Buscar por produto ou código do lote..." [(ngModel)]="termoBusca" aria-label="Buscar lotes">
+    </label>
+    <span class="contador">{{ lotesFiltrados.length }} {{ lotesFiltrados.length === 1 ? 'lote' : 'lotes' }}</span>
+  </div>
+
+  <p class="mensagem erro" *ngIf="erro" role="alert">{{ erro }}</p>
+  <section class="tabela-container" aria-label="Lotes do estoque">
+    <table>
+      <thead>
+        <tr><th>Código do lote</th><th>Produto</th><th>Quantidade</th><th>Validade</th><th>Status</th><th class="col-acoes">Ações</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="carregando"><td colspan="6" class="estado-vazio">Carregando estoque...</td></tr>
+        <tr *ngFor="let lote of lotesFiltrados">
+          <td><span class="codigo">{{ lote.batchCode }}</span><span class="id">Lote #{{ lote.id }}</span></td>
+          <td><span class="produto">{{ lote.productName }}</span></td>
+          <td><span class="quantidade">{{ lote.quantity }}</span> un.</td>
+          <td>{{ lote.expirationAt | date:'dd/MM/yyyy' }}</td>
+          <td><span class="status" [class.disponivel]="status(lote) === 'Disponível'" [class.vencido]="status(lote) === 'Vencido'" [class.esgotado]="status(lote) === 'Esgotado'"><i></i>{{ status(lote) }}</span></td>
+          <td class="col-acoes"><div class="acoes">
+            <button class="btn-acao editar" type="button" (click)="editarLote(lote)" [attr.aria-label]="'Editar lote ' + lote.batchCode" title="Editar lote"><i class="fas fa-pen"></i></button>
+            <button class="btn-acao excluir" type="button" (click)="excluirLote(lote)" [attr.aria-label]="'Excluir lote ' + lote.batchCode" title="Excluir lote"><i class="fas fa-trash"></i></button>
+          </div></td>
+        </tr>
+        <tr *ngIf="!carregando && lotesFiltrados.length === 0"><td colspan="6" class="estado-vazio">{{ termoBusca ? 'Nenhum lote encontrado para essa busca.' : 'Ainda não há lotes cadastrados.' }}</td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<app-estoque-details [modalAberto]="modalAberto" [modoEdicao]="modoEdicao" [produtos]="produtos" [lote]="loteSelecionado" (fechar)="fecharModal()" (salvarLote)="salvarLote($event)"></app-estoque-details>

@@ -1,0 +1,171 @@
+<main class="produtos-container">
+  <div class="barra-superior">
+    <label class="campo-busca">
+      <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+      <input
+        type="search"
+        placeholder="Buscar Produto..."
+        aria-label="Buscar produtos"
+        [ngModel]="termoBusca"
+        (ngModelChange)="buscar($event)">
+    </label>
+    <button class="btn-novo" type="button" (click)="abrirModal()">Novo produto</button>
+  </div>
+
+  <p class="mensagem erro" *ngIf="erro" role="alert">{{ erro }}</p>
+
+  <section class="tabela-container" aria-label="Produtos cadastrados">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Código de barras</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Status</th>
+          <th class="col-acoes">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="carregando">
+          <td colspan="6" class="estado-vazio">Carregando produtos...</td>
+        </tr>
+        <tr *ngFor="let item of produtosDaPagina">
+          <td class="nome-produto">{{ item.name }}</td>
+          <td>{{ item.barcode }}</td>
+          <td>{{ item.category }}</td>
+          <td class="preco">{{ item.salePrice | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+          <td>
+            <span class="status" [class.ativo]="item.active" [class.inativo]="!item.active">
+              <i></i>{{ item.active ? 'Ativo' : 'Inativo' }}
+            </span>
+          </td>
+          <td class="col-acoes">
+            <div class="acoes">
+              <button
+                class="btn-acao status-toggle"
+                [class.reativar]="!item.active"
+                type="button"
+                (click)="abrirModalStatus(item)"
+                [attr.aria-label]="(item.active ? 'Inativar ' : 'Ativar ') + item.name"
+                [title]="item.active ? 'Inativar produto' : 'Ativar produto'">
+                <i class="fas" [class.fa-trash]="item.active" [class.fa-rotate-left]="!item.active" aria-hidden="true"></i>
+              </button>
+              <button
+                class="btn-acao editar"
+                type="button"
+                (click)="editarProduto(item)"
+                [attr.aria-label]="'Editar ' + item.name"
+                title="Editar produto">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!carregando && produtosFiltrados.length === 0">
+          <td colspan="6" class="estado-vazio">
+            {{ termoBusca ? 'Nenhum produto encontrado para essa busca.' : 'Ainda não há produtos cadastrados.' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <nav class="paginacao" aria-label="Paginação de produtos" *ngIf="totalPaginas > 1">
+    <button type="button" class="pagina" aria-label="Página anterior" [disabled]="paginaAtual === 1" (click)="paginaAtual = paginaAtual - 1">
+      <i class="fas fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <button
+      type="button"
+      class="pagina"
+      *ngFor="let pagina of paginas"
+      [class.selecionada]="paginaAtual === pagina"
+      [attr.aria-current]="paginaAtual === pagina ? 'page' : null"
+      (click)="paginaAtual = pagina">{{ pagina }}</button>
+    <button type="button" class="pagina" aria-label="Próxima página" [disabled]="paginaAtual === totalPaginas" (click)="paginaAtual = paginaAtual + 1">
+      <i class="fas fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </nav>
+</main>
+
+<div class="produto-modal-backdrop" *ngIf="modalAberto" (click)="fecharModal()" (keydown.escape)="fecharModal()">
+  <section class="produto-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal" (click)="$event.stopPropagation()">
+    <header class="modal-cabecalho">
+      <div>
+        <p class="eyebrow">CATÁLOGO DE PRODUTOS</p>
+        <h2 id="titulo-modal">{{ modoEdicao ? 'Editar produto' : 'Novo produto' }}</h2>
+      </div>
+      <button type="button" class="fechar-modal" aria-label="Fechar" (click)="fecharModal()">×</button>
+    </header>
+
+    <form #formProduto="ngForm" (ngSubmit)="salvarProduto()">
+      <div class="modal-conteudo">
+        <p class="mensagem erro" *ngIf="erroFormulario" role="alert">{{ erroFormulario }}</p>
+        <label class="campo">
+          <span>Nome do produto</span>
+          <input name="name" [(ngModel)]="produto.name" required maxlength="150" autocomplete="off">
+        </label>
+        <div class="linha-campos">
+          <label class="campo">
+            <span>Código de barras</span>
+            <input name="barcode" [(ngModel)]="produto.barcode" required maxlength="255" autocomplete="off">
+          </label>
+          <label class="campo">
+            <span>Categoria</span>
+            <input name="category" [(ngModel)]="produto.category" required maxlength="150" autocomplete="off">
+          </label>
+        </div>
+        <label class="campo">
+          <span>Descrição</span>
+          <textarea name="description" [(ngModel)]="produto.description" required maxlength="200" rows="2"></textarea>
+        </label>
+        <div class="linha-campos">
+          <label class="campo">
+            <span>Preço de custo</span>
+            <input name="costPrice" type="number" [(ngModel)]="produto.costPrice" min="0.01" step="0.01" required>
+          </label>
+          <label class="campo">
+            <span>Preço de venda</span>
+            <input name="salePrice" type="number" [(ngModel)]="produto.salePrice" min="0.01" step="0.01" required>
+          </label>
+        </div>
+        <div class="linha-campos">
+          <label class="campo">
+            <span>Estoque mínimo</span>
+            <input name="minimumStock" type="number" [(ngModel)]="produto.minimumStock" min="1" step="1" required>
+          </label>
+          <label class="campo">
+            <span>Status</span>
+            <select name="active" [(ngModel)]="produto.active">
+              <option [ngValue]="true">Ativo</option>
+              <option [ngValue]="false">Inativo</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <footer class="modal-acoes">
+        <button type="button" class="btn-secundario" [disabled]="salvando" (click)="fecharModal()">Cancelar</button>
+        <button type="submit" class="btn-salvar" [disabled]="formProduto.invalid || salvando">
+          {{ salvando ? 'Salvando...' : (modoEdicao ? 'Salvar alterações' : 'Cadastrar produto') }}
+        </button>
+      </footer>
+    </form>
+  </section>
+</div>
+
+<div class="produto-modal-backdrop" *ngIf="modalStatusAberto && produtoParaAlterarStatus" (click)="fecharModalStatus()">
+  <section class="produto-modal produto-modal-confirmacao" role="dialog" aria-modal="true" aria-labelledby="titulo-status" (click)="$event.stopPropagation()">
+    <header class="modal-cabecalho">
+      <div>
+        <p class="eyebrow">STATUS DO PRODUTO</p>
+        <h2 id="titulo-status">{{ produtoParaAlterarStatus.active ? 'Inativar produto?' : 'Ativar produto?' }}</h2>
+      </div>
+      <button type="button" class="fechar-modal" aria-label="Fechar" (click)="fecharModalStatus()">×</button>
+    </header>
+    <p>O produto <strong>{{ produtoParaAlterarStatus.name }}</strong> será {{ produtoParaAlterarStatus.active ? 'inativado' : 'ativado' }}.</p>
+    <footer class="modal-acoes">
+      <button type="button" class="btn-secundario" (click)="fecharModalStatus()">Cancelar</button>
+      <button type="button" class="btn-salvar" (click)="confirmarAlteracaoStatus()">Confirmar</button>
+    </footer>
+  </section>
+</div>
